@@ -1,0 +1,13 @@
+[Unit]
+Description=Net Uptime Monitor Service
+After=network.target
+
+[Service]
+Type=simple
+User=mostafa
+ExecStart=/usr/bin/node index.mjs
+WorkingDirectory=/home/mostafa/projects/net-uptime-monitor
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
