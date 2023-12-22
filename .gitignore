@@ -1,0 +1,10 @@
+# node related .gitignore
+node_modules
+npm-debug.log
+yarn-error.log
+
+# env
+.env
+
+groups.json
+nohup.out
