@@ -67,9 +67,9 @@ const checkInternet = async () => {
             1000;
           const message = await bot.sendMessage(
             chatId,
-            `😬 Back online. We had a downtime of ${downtimeDuration} seconds. Last uptime was at ${new Date(
-              groups[chatId].lastUptime,
-            ).toLocaleString('en-US', { hour12: false })}`,
+            `😬 Back online. We had a downtime of ${humanReadableTime(
+              downtimeDuration || 0,
+            )} seconds.`,
           );
           // this message should pinned to the group
           await bot.pinChatMessage(chatId, message.message_id);
@@ -82,7 +82,7 @@ const checkInternet = async () => {
           chatId,
           `🆙 Internet is online ${new Date().toLocaleString('en-US', {
             hour12: false,
-          })}`,
+          })}.`,
         );
       } catch (error) {
         // remove if the bot was blocked
@@ -104,6 +104,22 @@ const checkInternet = async () => {
     isChecking = false;
   }
 };
+
+function humanReadableTime(seconds) {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds - hours * 3600) / 60);
+  const secondsLeft = seconds - hours * 3600 - minutes * 60;
+  return `${
+    (hours > 0 ? hours + ' hours ' : '') +
+    (minutes > 0 ? minutes + ' minutes ' : '') +
+    (secondsLeft > 0 ? roundToDecimalPlaces(secondsLeft, 2) + ' seconds' : '')
+  }`;
+}
+
+function roundToDecimalPlaces(num, decimalPlaces) {
+  const multiplier = Math.pow(10, decimalPlaces);
+  return Math.round(num * multiplier) / multiplier;
+}
 
 console.log('Bot is running');
 setInterval(checkInternet, (process.env.CHECK_INTERVAL || 60) * 1000);
